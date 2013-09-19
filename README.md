@@ -16,7 +16,7 @@ Documents
 - MIDI: [midi.org][midi]
 - Open Sound Control: [wikipedia][osc]
 - Synthesizer Effects: [tuts+ noise effects][effects]
-- Java Synthesizer Example: [java midi][java[]
+- Java Synthesizer Example: [java midi][java]
 - CSV-to-MIDI Converter: [converter][csv]
 
 
