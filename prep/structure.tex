@@ -1,0 +1,52 @@
+\documentclass[letterpaper,fleqn,6pt]{article}
+\usepackage{fullpage, amsmath, amssymb, enumerate}
+\usepackage[margin=0.5in]{geometry}
+
+\author{William Falk-Wallace, Hila Gutfreund, Emily Lemonier, Thomas Elling}
+\title{COMSW4115: Programming Languages and Translators}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Terminology}
+\begin{enumerate}[1) ]
+\item
+Note: atomic element specifies a sound comprised of:
+\begin{enumerate}[a) ]
+\item
+Duration: measured in beats (which correspond to the elapsed time interval during which the sound is present)
+\item
+Pitch: tonal frequency (function or discrete values?)
+\item
+Aplitude: volume
+\item
+Wavetype: 
+\begin{enumerate}[$\cdot$]
+\item Sine
+\item Square
+\item Sawtooth
+\item Triangular
+\end{enumerate}
+\item
+Wave Envelope:
+\begin{enumerate}[$\cdot$]
+\item Attack: ramp from silence to peak volume
+\item Decay: small drop from peak to functional volume
+\item Sustain: operating volume sustained from end of decay volume
+\item Release: ramp down from sustain volume to silence
+\end{enumerate}
+\end{enumerate}
+\item
+Chord: collection of notes initiated at the same time (is this sufficient?)
+\item 
+Track: collection of \emph{Notes} and \emph{Chords} organized over a time interval the length of the \emph{Song}; no notes or chords are played at the same moment within a track (see song definition and think iMovie) audio tracks.
+\item
+Song: a collection of superimposed \emph{Tracks} that run the full length of the song (begin simultaneously and end simultaneously -- maybe track-offset is an effect? needs consideration of narrowness)
+\end{enumerate}
+
+
+
+
+\end{document}
