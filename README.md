@@ -13,7 +13,7 @@ Documents
 **Resources**
  
 - Music/Synth Basics: [explainthatstuff][basics]
-- MIDI: [midi.org][midi]
+- MIDI Overview: [midi.org][midi]
 - Open Sound Control: [wikipedia][osc]
 - Synthesizer Effects: [tuts+ noise effects][effects]
 - Java Synthesizer Example: [java midi][java]
