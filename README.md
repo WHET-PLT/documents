@@ -6,6 +6,7 @@ Documents
 **Contents**
 
 - Proposal: create a language for synth. 
+	- [General MIDI Patchmap][pm] (Instrument Mapping)
 - Structure: musical terminology and structure
 - White paper: tba
 
@@ -28,3 +29,4 @@ Documents
 [effects]: http://audio.tutsplus.com/tutorials/production/essential-synthesis-part-1-synth-noise-effects/
 [java]: http://xantorohara.blogspot.com/2008/01/simple-java-midi-synthesizer-sample.html
 [csv]: http://www.penguinpeepshow.com/programs/csv-to-midi-converter/
+[pm]: http://people.virginia.edu/~pdr4h/gmpatch.html
