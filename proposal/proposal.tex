@@ -1,17 +1,185 @@
-\documentclass[letterpaper,fleqn,6pt]{article}
-%\usepackage[margin=0.25in]{geometry}
+%lowercase language?
 
+\documentclass[letterpaper]{article}
+\usepackage{fullpage, amsmath, amssymb, enumerate, tabularx, listings, color, float}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[bottom]{footmisc}
+
+%for the code example parts
+\definecolor{gray}{gray}{0.5}
+\lstset{numbers=left, numbersep=5pt, numberstyle=\tiny \color{gray}, frame=l, commentstyle=\color{gray}, comment=[l]{\/\/}}
+
+%document details
 \author{William Falk-Wallace, Hila Gutfreund, Emily Lemonier, Thomas Elling}
-\title{COMSW4115: Programming Languages and Translators}
-\date{\today}
+\title{COMSW4115: Programming Languages and Translators\\The DJ Language: MIDI Synthesizer Language Proposal}
+\date{September 25, 2013}
 
 \begin{document}
 
+%first page: title and toc
 \maketitle
+\tableofcontents 
+\pagebreak[4]
 
+%sections
 \section{Purpose}
+The goal of our project is to create a programmatic control interface for the Musical Instrument Digital Interface Specification (MIDI). MIDI is a technology standard that allows a wide variety of electronic musical instruments, computers, and other related devices to connect and communicate with one another.\footnote[1]{``MIDI Overview" MIDI.org, 21 Sep 2013. Web. 24 Sep 2013. \textless http://www.midi.org/aboutmidi/tut\_midimusicsynth.php\textgreater.}  
+%why are we citing wikipedia when we can just cite midi?
+%\footnote[1]{``MIDI." Wikipedia. N.p., 21 Sep 2013. Web. 24 Sep 2013. $<$http://en.wikipedia.org/wiki/MIDI$>$.}
+Through the specification of this programming language, called The DJ Language (extension \texttt{.dj}), we are able to bring synthesized electronic music production as well as musical score design capabilities directly to an artist's computer. 
+
+
 \section{Overview}
+%Btw- iteration + repetition are pretty much synonymous I think.
+%NOTE: we're not really developing a programming paradigm...more that this language is a part of either a  imperative, functional, object-oriented, and logic programming paradigm. Right? Check first sentence please. we are developing a paradigm. use framework if it is irksome.
+
+We propose a procedural scripting language, DJ, which provides a programming paradigm for algorithmic music production. Through its utilization of themes and motifs, music is naturally repetitive and often dynamic. DJ provides control-flow mechanisms, including \texttt{for} and \texttt{loop} functions, which simplify the development of structured iterative music. The DJ Language also makes use of conditional logic and offers built-in effects (including pitch bend, tremolo and vibrato). Moreover, it supports extensible sound banks to facilitate the production of deeply textured musical compositions. Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing songs. % #BARNARD --> huh?
+
+
 \section{Features}
+
+\begin{itemize}
+\item
+Note, Chord, and Track are defined as primitives and are hierarchical. The hierarchy is as follows: Tracks are composed of Chords, which are composed of Notes and Rests.
+\item
+Notes are represented by ordered seven-tuples defining characteristic attributes, including pitch, instrumentation, volume, duration (in beats), the presence of effects including tremolo, vibrato, and pitch bend. The primitive Rest object allows for a pause in a Track.
+\item
+Tracks, Chords, and Notes may be added in series or parallel. A new Track is produced by adding Tracks in series or parallel. Chords produce Tracks when added in series. Notes added produce Chords when added in parallel.
+\item
+Several mutative operators exist for manipulating Note attributes at the Note, Chord, and Track level.
+\item
+All programs consist of a single Main function that returns an array of tracks, intended to start simultaneously and be played in parallel. Each array element can be considered as a polyphonic MIDI channel. This array of tracks is compiled into a bytecode file containing the complete set of midi-messages required to produce the programmed song. A third party bytecode-to-MIDI interpreter will be used to produce the final sound file.
+\item
+Song-wide properties are specified to the compiler. Attributes such as tempo/beats per minute and channel looping are available as compiler options.
+\item
+This structure, as well as the use of the MIDI specification and interface, allows for a fairly extensible language and production capability. For example, through the manipulation or linking of sound banks, new sounds and samples are able to be incorporated to produce rich and interesting programmatic music.
+\end{itemize}
+
 \section{Syntax}
 
+The following subsections and tables represent the primitives, operators, and functions defined in the DJ Language specification.
+
+\begin{samepage}
+\subsection{Primitives}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+Integer & Used for addressing and specifying Note/Chord/Track attributes. \\
+\hline
+Array & Fixed-length collection of elements (int, Note, Chord, Track), each identified by at least one array index. \\
+\hline
+Note & Ordered tuple containing pitch (pitch), instrument (instr), volume (vol), duration (dur), tremolo (trem), vibrato (vib), pitch bend (pb) (n.b. pitch number is sequentially numbered in tonal half-step increments; tremolo and vibrato attributes are boolean). \\
+\hline
+Rest & A durational note with no volume and no pitch and which is not responsive to pitch, volume, or effect operations. \\
+\hline
+Chord & Vector of Notes (size $\geq$ 1). \\
+\hline
+Track & Vector of Chords (size $\geq$ 1). \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\subsection{Operators}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+$>$, $<$ & Pitchbend: changes the pitch bend of a Note, the Notes of a Chord, or all Notes of a Track. (binary) \\
+\hline
+$+$, $-$ & Increase/Decrease pitch of an individual note, all Notes in a Chord, or all Notes in a track, respectively, by a specified amount. (binary) \\
+\hline
+$++$, $--$ & Increase/Decrease respective pitch of Notes, either atomically or in a Chord or Track by a single integer increment (tonal half-step). (unary) \\
+\hline
+$[<$int$>]$ & Address Array, Chord, or Track element at given index. (unary) \\
+\hline
+$\sim$ & Creates a tremelo effect on the individual note, all Notes in the Chord, or all Notes in the Track that it operates on. (unary) \\
+\hline
+$\wedge$ & Creates a vibratro effect on the individual note, all Notes in the Chord, or all Notes in the Track that it operates on. (unary) \\
+\hline
+: & Parallel Add: adds Notes, Chords, or Tracks in parallel. When used on Notes, returns a new Chord containing both Notes; when used on Chords, returns a new Chord representing the union of both original Chords; when used with Tracks, returns a new Track such that Chords are added in parallel by corresponding time tick, with no added offset. (binary) \\
+\hline
+. & Serial Add: both operands must be Tracks. The right operand is concatenated to the first, and a third, new  Track is returned. Notes are elevated to size-one Chords and Chords are elevated to Tracks before concatenating. (binary) \\
+\hline
+$=$ & Assignment operator. (binary) \\
+\hline
+$+=$ & Integer Add-in-place. (binary)\\
+\hline
+$|$ & Conditional OR. (binary)\\
+\hline
+\& & Conditional AND. (binary)\\
+\hline
+$==$ & Logical equality (deep). (binary) \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\subsection{Functions}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+vol($<$int$>$) & Change Chord/Note/Track volume (integer value 0-99). (absolute) \\
+\hline
+dur($<$int$>$) & Change Chord/Note duration (number of beats). (absolute) \\
+\hline
+loop($<$int$>$) & Loops a given Note, Chord, or Track the over number of beats specified. If given a number of beats fewer than the total track size (n.b. implicit elevation occurs as necessary), first $<$int$>$ beats will be included. \\
+\hline
+repeat($<$int$>$) & Repeats a given Note, Chord, or Track $<$int$>$ times, returning a new Track. \\
+\hline
+add($<$chord$>$) & Adds a Chord to a Track. \\
+\hline
+strip($<$chord$>$) & Removes all instances of Chord from a Track. \\
+\hline
+remove($<$int$>$) & Removes Chord from Track at designated location. \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\subsection{Reserved Words and Conditionals}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+if (\textit{expr}) \{...\} else \{...\}& Paired control flow statement that acts upon the logical expression within the \texttt{if} statement parentheses. If the expression evaluates to true, the control flow will continue to the code contained within the braces of the \texttt{if} body. If the argument is false, then control flow moves on to the code in the braces of the \texttt{else} body. \\
+\hline
+return & Terminates control flow of the current function and returns control flow to the calling function, passing immediately subsequent primitive to calling function.\\
+\hline
+null & Undefined object identifier; used in declaring non-\texttt{return}ing functions. \\
+\hline
+int, Array Note, Rest, Chord, Track & Type declaration specifiers.\\
+\hline
+SONG \{\} & Conventional "main" function declaration, with unspecified return type, which indicates program outset to the compiler.\\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\section{Examples}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 1: Arpeggio}
+\lstinputlisting{arpeggio_dj.txt}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 2: Loop With Effects}
+\lstinputlisting{loop_with_effects_dj.txt}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 3: Add/Remove Notes \& Chords}
+\lstinputlisting{addRemoveChords_dj.txt}
+\end{minipage}
+
 \end{document}
+
+
+
+

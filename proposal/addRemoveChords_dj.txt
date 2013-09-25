@@ -1,0 +1,35 @@
+null reverseAddFancy{
+	//create tracks track, adds and remove chords
+	Note a, b, c, d, e, f; 
+	
+	//the note pitches
+	int midC = 60; //pitch 60 is usually around middle C
+	int upabit = 62;
+	int downabit = 40;
+	int sumthinElse = 88;
+	int lyfe = 42;
+	
+	//some other note attributes
+	int volume = 20; //nice and quiet
+	int oh = 47; //use an Orchestral Harp -- General MIDI mapping
+	int shortish = 2;
+	int longer = 5;
+
+	//define the notes
+	a = {midC, oh, volume, shortish};
+	b = {lyfe, oh, volume, longer};
+	c = {sumthinElse, oh, volume, longer};
+
+	d = {upabit, oh, volume, shortish};
+	e = {downabit, oh, volume, longer};
+	f = {midC, oh, volume, shortish};
+
+    
+	Chord newChord = a : b : c; //parallel add to make a chord
+	Chord oldChord = d : (f : e);
+	Track newTrack = newChord.oldChord; //add track with serial add
+	newTrack.strip(newChord); //remove all instances of specific chord
+	newTrack.newChord; // add newChord back; 
+	newTrack.remove(0); // removes oldChord;
+	newTrack[0] < 5; //pitchbend newChord up 5
+}
