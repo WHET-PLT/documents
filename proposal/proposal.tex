@@ -10,7 +10,7 @@
 \lstset{numbers=left, numbersep=5pt, numberstyle=\tiny \color{gray}, frame=l, commentstyle=\color{gray}, comment=[l]{\/\/}}
 
 %document details
-\author{William Falk-Wallace, Hila Gutfreund, Emily Lemonier, Thomas Elling}
+\author{William Falk-Wallace (wgf2104), Hila Gutfreund (hg2287), \\Emily Lemonier (eql2001), Thomas Elling (tee2103)}
 \title{COMSW4115: Programming Languages and Translators\\The DJ Language: MIDI Synthesizer Language Proposal}
 \date{September 25, 2013}
 
@@ -48,7 +48,7 @@ Tracks, Chords, and Notes may be added in series or parallel. A new Track is pro
 \item
 Several mutative operators exist for manipulating Note attributes at the Note, Chord, and Track level.
 \item
-All programs consist of a single Main function that returns an array of tracks, intended to start simultaneously and be played in parallel. Each array element can be considered as a polyphonic MIDI channel. This array of tracks is compiled into a bytecode file containing the complete set of midi-messages required to produce the programmed song. A third party bytecode-to-MIDI interpreter will be used to produce the final sound file.
+All programs consist of a single main function, called \texttt{SONG}, that returns an array of tracks, intended to start simultaneously and be played in parallel. Each array element can be considered as a polyphonic MIDI channel. This array of tracks is compiled into a bytecode file containing the complete set of MIDI-messages required to produce the programmed song. A third party bytecode-to-MIDI interpreter will be used to produce the final sound file.
 \item
 Song-wide properties are specified to the compiler. Attributes such as tempo/beats per minute and channel looping are available as compiler options.
 \item
@@ -89,7 +89,7 @@ Track & Vector of Chords (size $\geq$ 1). \\
 \hline
 $>$, $<$ & Pitchbend: changes the pitch bend of a Note, the Notes of a Chord, or all Notes of a Track. (binary) \\
 \hline
-$+$, $-$ & Increase/Decrease pitch of an individual note, all Notes in a Chord, or all Notes in a track, respectively, by a specified amount. (binary) \\
+$+$, $-$ & Increase/Decrease pitch of an individual note, all Notes in a Chord, or all Notes in a Track, respectively, by a specified amount. (binary) \\
 \hline
 $++$, $--$ & Increase/Decrease respective pitch of Notes, either atomically or in a Chord or Track by a single integer increment (tonal half-step). (unary) \\
 \hline
