@@ -20,7 +20,7 @@ Documents
 - Java Synthesizer Example: [java midi][java]
 - CSV-to-MIDI Converter: [converter][csv]
 
-
+->![image](assets/drop_medium.png)<-
 
 <!-- footnotes -->
 [basics]: http://www.explainthatstuff.com/synthesizers.html
