@@ -11,3 +11,14 @@ also worth noting,
 1. setup gitignore so we dont get .DS_store, binaries, or other junk
 2. COMMENT EVERYTHING
 3. Commit often/atomically, but only push working/functioning changesets (see above, 5)
+
+
+**Some extra Git resources:**
+
+- [Git Concepts Simplified][gitsimp]
+
+
+
+
+
+[gitsimp]: http://gitolite.com/gcs/index.html
