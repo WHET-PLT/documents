@@ -87,7 +87,7 @@ track & Object representing an extensible collection of chords (size $\geq$ 1). 
 \centering
 \begin{tabularx}{.75\textwidth}{|c|X|}
 \hline
-$>$, $<$ & Pitchbend: changes the pitch bend of a Note, the Notes of a Chord, or all Notes of a Track. (binary) \\
+$>$, $<$ & Pitchbend: changes the pitch bend of a Note, the Notes of a Chord, or all Notes of a Track; takes an integer rvalue. (binary) \\
 \hline
 $+$, $-$ & Increase/Decrease pitch of an individual note, all Notes in a Chord, or all Notes in a Track, respectively, by a specified amount. (binary) \\
 \hline
@@ -118,7 +118,7 @@ $==$ & Logical equality (deep). (binary) \\
 \end{samepage}
 
 \begin{samepage}
-\subsection{Functions}
+\subsection{Primitive Methods and Built-in Functions}
 \begin{table}[H]
 \centering
 \begin{tabularx}{.75\textwidth}{|c|X|}
@@ -153,9 +153,15 @@ return & Terminates control flow of the current function and returns control flo
 \hline
 null & Undefined object identifier; used in declaring non-\texttt{return}ing functions. \\
 \hline
-int, Array Note, Rest, Chord, Track & Type declaration specifiers.\\
+int, array, note, rest, chord, track & Type declaration specifiers.\\
 \hline
-SONG \{\} & Conventional "main" function declaration, with unspecified return type, which indicates program outset to the compiler.\\
+song \{\} & Conventional "main" function declaration, with unspecified return type, which indicates program outset to the compiler.\\
+\hline
+fun & Function declaration specifier.\\
+\hline
+var & Variable declaration specifier\\
+\hline
+\#\{ $instrname -> num$; \ldots \} & Program header specifies patchmap override mappings\\
 \hline
 \end{tabularx}
 \end{table}
