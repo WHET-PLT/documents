@@ -33,7 +33,7 @@ Through the specification of this programming language, called The DJ Language (
 %Btw- iteration + repetition are pretty much synonymous I think.
 %NOTE: we're not really developing a programming paradigm...more that this language is a part of either a  imperative, functional, object-oriented, and logic programming paradigm. Right? Check first sentence please. we are developing a paradigm. use framework if it is irksome.
 
-We propose a procedural scripting language, DJ, which provides a programming paradigm for algorithmic music production. Through its utilization of themes and motifs, music is naturally repetitive and often dynamic. DJ provides control-flow mechanisms, including \texttt{for} and \texttt{loop} functions, which simplify the development of structured iterative music. The DJ Language also makes use of conditional logic and offers built-in effects (including pitch bend, tremolo and vibrato). Moreover, it supports extensible sound banks to facilitate the production of deeply textured musical compositions. Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing songs. % #BARNARD --> huh?
+We propose a procedural scripting language, DJ, which provides a programming paradigm for algorithmic music production. Through its utilization of themes and motifs, music is naturally repetitive and often dynamic. DJ provides control-flow mechanisms, including \texttt{for} and \texttt{loop} functions, which simplify the development of structured iterative music. The DJ Language also makes use of conditional logic and offers built-in effects (including pitch bend, tremolo and vibrato). Moreover, it supports extensible sound banks to facilitate the production of deeply textured musical compositions. Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing songs.
 
 
 \section{Features}
@@ -65,17 +65,17 @@ The following subsections and tables represent the primitives, operators, and fu
 \centering
 \begin{tabularx}{.75\textwidth}{|c|X|}
 \hline
-Integer & Used for addressing and specifying Note/Chord/Track attributes. \\
+integer & Used for representing integer values as well as specifying and addressing Note/Chord/Track attributes. \\
 \hline
-Array & Fixed-length collection of elements (int, Note, Chord, Track), each identified by at least one array index. \\
+array & Fixed-length collection of elements (int, Note, Chord, Track), each identified by at least one array index. \\
 \hline
-Note & Ordered tuple containing pitch (pitch), instrument (instr), volume (vol), duration (dur), tremolo (trem), vibrato (vib), pitch bend (pb) (n.b. pitch number is sequentially numbered in tonal half-step increments; tremolo and vibrato attributes are boolean). \\
+note & Object representing pitch (pitch), instrument (instr), volume (vol), duration (dur), tremolo (trem), vibrato (vib), pitch bend (pb) (n.b. pitch number is sequentially numbered in tonal half-step increments; tremolo and vibrato attributes are boolean). \\
 \hline
-Rest & A durational note with no volume and no pitch and which is not responsive to pitch, volume, or effect operations. \\
+rest & A durational musical element with no volume and no pitch and which is not responsive to pitch, volume, or effect operations. \\
 \hline
-Chord & Vector of Notes (size $\geq$ 1). \\
+chord & Object representing an extensible collection of notes (size $\geq$ 1). \\
 \hline
-Track & Vector of Chords (size $\geq$ 1). \\
+track & Object representing an extensible collection of chords (size $\geq$ 1). \\
 \hline
 \end{tabularx}
 \end{table}
@@ -165,17 +165,17 @@ SONG \{\} & Conventional "main" function declaration, with unspecified return ty
 
 \begin{minipage}{\linewidth}
 \subsection{Example 1: Arpeggio}
-\lstinputlisting{arpeggio_dj.txt}
+\lstinputlisting{examples/arpeggio_dj.txt}
 \end{minipage}
 
 \begin{minipage}{\linewidth}
 \subsection{Example 2: Loop With Effects}
-\lstinputlisting{loop_with_effects_dj.txt}
+\lstinputlisting{examples/loop_with_effects_dj.txt}
 \end{minipage}
 
 \begin{minipage}{\linewidth}
 \subsection{Example 3: Add/Remove Notes \& Chords}
-\lstinputlisting{addRemoveChords_dj.txt}
+\lstinputlisting{examples/addRemoveChords_dj.txt}
 \end{minipage}
 
 \end{document}
