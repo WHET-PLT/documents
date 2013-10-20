@@ -1,0 +1,360 @@
+%lowercase language?
+
+\documentclass[letterpaper]{article}
+\usepackage{fullpage, amsmath, amssymb, enumerate, tabularx, listings, color, float}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[bottom]{footmisc}
+
+%for the code example parts
+\definecolor{gray}{gray}{0.5}
+\lstset{numbers=left, numbersep=5pt, numberstyle=\tiny \color{gray}, frame=l, commentstyle=\color{gray}, comment=[l]{\/\/}}
+
+%document details
+\author{William Falk-Wallace (wgf2104), Hila Gutfreund (hg2287), \\Emily Lemonier (eql2001), Thomas Elling (tee2103)}
+\title{COMSW4115: Programming Languages and Translators\\The DJ Language: MIDI Synthesizer Language Reference Manual}
+\date{September 25, 2013}
+
+\begin{document}
+
+%first page: title and toc
+\maketitle
+\tableofcontents 
+\pagebreak[4]
+
+%sections
+\section{Introduction}
+We propose a procedural scripting language, DJ, which provides a programming paradigm for algorithmic music production. Through its utilization of themes and motifs, music is naturally repetitive and often dynamic. DJ provides control-flow mechanisms, including \texttt{for} and \texttt{loop} functions, which simplify the development of structured iterative music. The DJ Language also makes use of conditional logic and offers built-in effects (including pitch bend, tremolo and vibrato).
+%Moreover, it supports extensible sound banks to facilitate the production of deeply textured musical compositions.
+Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing songs.
+
+\section{Lexical Conventions}
+\subsection{Identifiers}
+An identifier is a sequence of letters, underscores and digits. The first character of an identifier is a letter ['a'-'z'] or ['A' - 'Z']. Note that in identifiers, uppercase and lowercase letters correspond to different characters.
+
+\begin{samepage}
+\subsection{Keywords}
+Keywords are reserved identifiers and may not be redefined. They are used for control structure, constants, as well as system level function calls.
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|X|X|X|}
+\hline
+\texttt{int} & \texttt{Note} & \texttt{Rest} \\
+\hline
+\texttt{Note} &  \texttt{Rest} & \texttt{Chord} \\
+\hline
+\texttt{Track} & \texttt{SONG} & \texttt{if} \\
+\hline
+\texttt{else}  & \texttt{for} & \texttt{loop}\\
+\hline
+\texttt{null} & \texttt{return} &  \\
+\hline
+\end{tabularx}
+\end{table}
+Things to consider: while, tempo. DO WE WANT TO INCLUDE THESE??
+How do we want to consider int, boolean (literals vs. types)?
+\end{samepage}
+\subsection{Literals}
+\subsubsection{Integers}
+An integer literal is a data type which represents some finite subset of the mathematical integers. If '-' is prepended to the integer, the value of the integer is considered negative (ex: int x = -22). Our language supports integer values within the range $[-22^{31}, 22^{31}]$.
+\subsubsection{Booleans}
+Boolean literals are represented by the keywords \texttt{true} and \texttt{false}. They are used in any comparison operation in which a boolean value is returned.
+\subsubsection{Note}
+Note literals are the most basic units of a song, and are represented using the following notation: (pitch, instrument, volume). (NOTE TO SELVES: we removed , duration, tremolo, vibrato, pitch bend from note definition.)
+\subsubsection{Rest}
+%DONT THINK THEYRE LITERALS BUT WE CAN ARGUE ABOUT THIS
+%\subsubsection{Chord}
+%\subsubsection{Array}
+%NOT A LITERAL JUST DONT KNOW WHERE TO PUT IT YET
+\subsection{Constants}
+A constant is a literal numeric or character value such as 5 or 'm'.
+Do we need constants?
+\subsubsection{Integer Constants}
+\subsubsection{Character Constants}
+A character constant is a single character enclosed within single quotation marks. A character constant is of type int by default. To represent characters there are several 'escape sequences' that you can use: '$\backslash$n' to represent newline for example. 
+\subsection{Operators}
+An operator is a special token that performs an operation, such as addition or subtraction, on either one, two, or three operands. Full discussion of operators will be found in the Expressions and Operators section.
+\subsection{Separators}
+A separator separates tokens. White space is a separator and discussed in the next section, but it is not a token. The other separators are all single-character tokens themselves. These separators include '( ) < > ;'. Note that '< >' is specifically used to define a note and ';' is used to indicate the end of an expression or statement. 
+\subsection{White Space}
+WHite space is the collective term used for several characters: the space character, the tab character, newline character. White space is ignored (outside of string and other character constants),  except when it is used to separate tokens. Whenever one space is allowed, any amount of white space is allowed. In string constants, spaced and tabs are a part of the string.
+For example: $x++;$ is equivalent to $x     ++;$ while "hello world" is not equivalent to "hello         world".
+\section{Collection (tuple object? Should this be a part of a larger data structures section)}
+A collection is similar to a tuple. A collection is an ordered list of n elements where n is a non-negative number. Collections are written by listing its elements within angle brackets '< >'. In DJ, we use collections to initialize notes. 
+\section{Expressions and Operators}
+All possible expressions. Precedence order from left to right for all expressions?
+\subsection{Fundamental expressions}
+identifiers eg. function name, variable name\\
+constants eg. note, volume, pitch\\
+expr\\
+note () eg.\\
+function () eg. function call with parameters within parens\\
+expr $+$\\
+expr $-$\\
+expr $++$\\
+expr $--$\\
+expr $>$\\
+expr $<$\\
+
+\subsection{Modification Operators}
+\subsubsection{expression + numeric literal}
+This expression takes the notes or chords specifed in the left operand and increases the notes or the individual notes in the chord by the number of half steps specified by the right operand. 
+
+\subsubsection{expression - numeric literal}
+This expression behaves like previous expression except the notes in the left operand are decreased by the specified number of half steps specified by the right operand. 
+
+\subsubsection{expression++}
+This expression behaves as a shorthand method for increasing notes in the left operand by one half step. 
+
+\subsubsection{expression --}
+This expression behaves as a shorthand method for decreasing notes in the left operand one half step. 
+
+\subsubsection{expression $<$}
+WILL CAN YOU FILL THIS OUT I DONT GET THIS - HILA
+
+\subsubsection{expression $>$}
+THIS TOO WILL THANK YOU YOU ARE A LIFE SAVER OK IM GONNA STOP - HILA
+
+\subsection{Effects}
+
+\subsubsection{expression\~{}}
+This expression takes the notes in the left operand and creates a tremelo effect on each individual note. 
+
+\subsubsection{expression\^{} }
+This expression takes the notes in the left operand and creates a vibrator effect on each indivdual note. 
+
+\subsection{Combinatorial Operators}
+\subsubsection{expression $:$}
+This expression takes the notes, chords, or tracks on the right hand side and parallel adds them to the current note, chord, or track. When used on Notes it returns a new Chord containing both Notes; when used on Chords it returns a new Chord representing the union of the original Chords; when used on tracks it returns a new Track such that the Chords are added in parallel by corresponding time tick, with no added offset. 
+
+\subsubsection{expression .}
+This expression takes the tracks in the right operand and concatonates them to the first track on the left operand. A third new track is returned containing the concatenated tracks. Notes are elevated to size one Chords and Chords are elevated to Tracks before concatenation. 
+
+/* So I think that we need things like rythm that uncombine things. So like unserial add and unparallel add. maybe !. and !: let me know - Hila
+*/
+
+\subsection{Equality Operators}
+\subsubsection{expression==expression}
+This expression checks whether all notes within two operands are equal to one another. 
+
+/* this is where i think we need an inequality thing != */ 
+
+\subsection{Assignment Operators}
+/* I know that we have = but how do we want to do this... maybe I'm just being ridiculous, but how exactly do we want to define =. I'm comparing ours to Rythm and maybe that's a bad thing but I'm slightly confused. */
+
+
+\section{Statements}
+Statements cause actions and are responsible for control flow within your programs.
+\subsection{The Expression Statements}
+Any statement can turn into an expression by adding a semicolon to the end of the expression (ex: 2+2;). 
+\subsection{The \texttt{if} Statement}
+We use the \texttt{if} statement to conditionally execute part of a program, based on the truth value of a given expression.
+General form of if statement: \\
+if (test) \\
+then-statement \\
+else
+else-statement (make this safe format as the examples?)
+\subsection{The \texttt{for} Statement}
+\subsection{The \texttt{return} Statement}
+\section{Functions}
+\subsection{Defining Functions}
+Functions are defined by a function name followed by parenthesis that contain parameters to the function separated by commas. All functions must have a return statement? The function body is contained between a curly brace at the beginning and a curly brace at the end of the function.
+
+mergeTrack (track1, track2) \{ \\
+		/*stuff*/ \\
+	return newtrack;\\
+\}
+
+
+\subsection{The SONG Function}
+The SONG function is where the tracks a user has created will be modified and/or combined. (This is where the music is essentially created?) The SONG function returns a song.
+
+ex.
+
+main \{
+
+\}
+
+\subsection{Reserved Functions}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+vol($<$int$>$) & Change Chord/Note/Track volume (integer value 0-99). (absolute) \\
+\hline
+dur($<$int$>$) & Change Chord/Note duration (number of beats). (absolute) \\
+\hline
+loop($<$int$>$) & Loops a given Note, Chord, or Track the over number of beats specified. If given a number of beats fewer than the total track size (n.b. implicit elevation occurs as necessary), first $<$int$>$ beats will be included. \\
+\hline
+repeat($<$int$>$) & Repeats a given Note, Chord, or Track $<$int$>$ times, returning a new Track. \\
+\hline
+add($<$chord$>$) & Adds a Chord to a Track. \\
+\hline
+strip($<$chord$>$) & Removes all instances of Chord from a Track. \\
+\hline
+remove($<$int$>$) & Removes Chord from Track at designated location. \\
+\hline
+\end{tabularx}
+\end{table}
+TODO: How do we want to think about duration as per Julian's recommendations?
+
+\subsection{Function/Variable Scoping}
+Braces determine the scope of a function/variables. For example, if a variable is declared within a function, it is a local variable to that function and can only be accessed in that function. That local variable would be defined within the braces of a function body. A global variable would be defined outside the scope of braces.
+Global functions?
+
+\subsection{Comments} 
+Want to use the /* ------- */ comment format? Or the // format? Both?
+And do we want to nest comments? Nested comments sound too complicated to parse through. 
+---  think we should do /* */ (would be easier to write compiler for, i think… ) - hila
+--- will suggested just using a comment per line. So if we had a ‘//’ then that whole line would be a comment. That would avoid confusion in terms of nesting comments. -tom
+
+\section{Compile Process and Output Files}
+CSV to MIDI to Java. CSV2MIDI Java Class. 
+%http://code.google.com/p/midilc/source/browse/trunk/src/components/CSV2MIDI.java?r=122
+
+\section{Features}
+
+\begin{itemize}
+\item
+Note, Chord, and Track are defined as primitives and are hierarchical. The hierarchy is as follows: Tracks are composed of Chords, which are composed of Notes and Rests.
+\item
+Notes are represented by ordered seven-tuples defining characteristic attributes, including pitch, instrumentation, volume, duration (in beats), the presence of effects including tremolo, vibrato, and pitch bend. The primitive Rest object allows for a pause in a Track.
+\item
+Tracks, Chords, and Notes may be added in series or parallel. A new Track is produced by adding Tracks in series or parallel. Chords produce Tracks when added in series. Notes added produce Chords when added in parallel.
+\item
+Several mutative operators exist for manipulating Note attributes at the Note, Chord, and Track level.
+\item
+All programs consist of a single main function, called \texttt{SONG}, that returns an array of tracks, intended to start simultaneously and be played in parallel. Each array element can be considered as a polyphonic MIDI channel. This array of tracks is compiled into a bytecode file containing the complete set of MIDI-messages required to produce the programmed song. A third party bytecode-to-MIDI interpreter will be used to produce the final sound file.
+\item
+Song-wide properties are specified to the compiler. Attributes such as tempo/beats per minute and channel looping are available as compiler options.
+\item
+This structure, as well as the use of the MIDI specification and interface, allows for a fairly extensible language and production capability. For example, through the manipulation or linking of sound banks, new sounds and samples are able to be incorporated to produce rich and interesting programmatic music.
+\end{itemize}
+
+\section{Syntax}
+
+The following subsections and tables represent the primitives, operators, and functions defined in the DJ Language specification.
+
+\begin{samepage}
+\subsection{Primitives}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+Integer & Used for addressing and specifying Note/Chord/Track attributes. \\
+\hline
+Array & Fixed-length collection of elements (int, Note, Chord, Track), each identified by at least one array index. \\
+\hline
+Note & Ordered tuple containing pitch (pitch), instrument (instr), volume (vol), duration (dur), tremolo (trem), vibrato (vib), pitch bend (pb) (n.b. pitch number is sequentially numbered in tonal half-step increments; tremolo and vibrato attributes are boolean). \\
+\hline
+Rest & A durational note with no volume and no pitch and which is not responsive to pitch, volume, or effect operations. \\
+\hline
+Chord & Vector of Notes (size $\geq$ 1). \\
+\hline
+Track & Vector of Chords (size $\geq$ 1). \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\subsection{Operators}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+$>$, $<$ & Pitchbend: changes the pitch bend of a Note, the Notes of a Chord, or all Notes of a Track. (binary) \\
+\hline
+$+$, $-$ & Increase/Decrease pitch of an individual note, all Notes in a Chord, or all Notes in a Track, respectively, by a specified amount. (binary) \\
+\hline
+$++$, $--$ & Increase/Decrease respective pitch of Notes, either atomically or in a Chord or Track by a single integer increment (tonal half-step). (unary) \\
+\hline
+$[<$int$>]$ & Address Array, Chord, or Track element at given index. (unary) \\
+\hline
+$\sim$ & Creates a tremelo effect on the individual note, all Notes in the Chord, or all Notes in the Track that it operates on. (unary) \\
+\hline
+$\wedge$ & Creates a vibratro effect on the individual note, all Notes in the Chord, or all Notes in the Track that it operates on. (unary) \\
+\hline
+: & Parallel Add: adds Notes, Chords, or Tracks in parallel. When used on Notes, returns a new Chord containing both Notes; when used on Chords, returns a new Chord representing the union of both original Chords; when used with Tracks, returns a new Track such that Chords are added in parallel by corresponding time tick, with no added offset. (binary) \\
+\hline
+. & Serial Add: both operands must be Tracks. The right operand is concatenated to the first, and a third, new  Track is returned. Notes are elevated to size-one Chords and Chords are elevated to Tracks before concatenating. (binary) \\
+\hline
+$=$ & Assignment operator. (binary) \\
+\hline
+$+=$ & Integer Add-in-place. (binary)\\
+\hline
+$|$ & Conditional OR. (binary)\\
+\hline
+\& & Conditional AND. (binary)\\
+\hline
+$==$ & Logical equality (deep). (binary) \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\subsection{Functions}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+vol($<$int$>$) & Change Chord/Note/Track volume (integer value 0-99). (absolute) \\
+\hline
+dur($<$int$>$) & Change Chord/Note duration (number of beats). (absolute) \\
+\hline
+loop($<$int$>$) & Loops a given Note, Chord, or Track the over number of beats specified. If given a number of beats fewer than the total track size (n.b. implicit elevation occurs as necessary), first $<$int$>$ beats will be included. \\
+\hline
+repeat($<$int$>$) & Repeats a given Note, Chord, or Track $<$int$>$ times, returning a new Track. \\
+\hline
+add($<$chord$>$) & Adds a Chord to a Track. \\
+\hline
+strip($<$chord$>$) & Removes all instances of Chord from a Track. \\
+\hline
+remove($<$int$>$) & Removes Chord from Track at designated location. \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\subsection{Reserved Words and Conditionals}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+if (\textit{expr}) \{...\} else \{...\}& Paired control flow statement that acts upon the logical expression within the \texttt{if} statement parentheses. If the expression evaluates to true, the control flow will continue to the code contained within the braces of the \texttt{if} body. If the argument is false, then control flow moves on to the code in the braces of the \texttt{else} body. \\
+\hline
+return & Terminates control flow of the current function and returns control flow to the calling function, passing immediately subsequent primitive to calling function.\\
+\hline
+null & Undefined object identifier; used in declaring non-\texttt{return}ing functions. \\
+\hline
+int, Array Note, Rest, Chord, Track & Type declaration specifiers.\\
+\hline
+SONG \{\} & Conventional "main" function declaration, with unspecified return type, which indicates program outset to the compiler.\\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\section{Examples}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 1: Arpeggio}
+\lstinputlisting{examples/arpeggio_dj.txt}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 2: Loop With Effects}
+\lstinputlisting{examples/loop_with_effects_dj.txt}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 3: Add/Remove Notes \& Chords}
+\lstinputlisting{examples/addRemoveChords_dj.txt}
+\end{minipage}
+
+\end{document}
+
+
+
+
