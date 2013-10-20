@@ -1,14 +1,15 @@
-Documents
+Documents ![image](assets/drop_tiny.png)
 =========
 *Submissions, white papers, internal documents, and resources*
 
 
 **Contents**
 
-- Proposal: create a language for synth. 
+- **_Proposal_**: Design proposal for a synthesizer language
 	- [General MIDI Patchmap][pm] (Instrument Mapping)
-- Structure: musical terminology and structure
-- White paper: tba
+- _Structure_: Musical terminology and structure for reference
+- **_LRM_**: The DJ Language Reference Manual
+- _Examples_: Example program source files
 
 
 **Resources**
@@ -20,7 +21,7 @@ Documents
 - Java Synthesizer Example: [java midi][java]
 - CSV-to-MIDI Converter: [converter][csv]
 
-->![image](assets/drop_medium.png)<-
+
 
 <!-- footnotes -->
 [basics]: http://www.explainthatstuff.com/synthesizers.html
