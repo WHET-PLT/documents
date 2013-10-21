@@ -1,8 +1,8 @@
-%lowercase language?
-
 \documentclass[letterpaper]{article}
 \usepackage{fullpage, amsmath, amssymb, enumerate, tabularx, listings, color, float}
+%take up ALLOFTHEPAGE
 \usepackage[margin=0.75in]{geometry}
+%for footnotes
 \usepackage[bottom]{footmisc}
 
 %for the code example parts
@@ -11,8 +11,8 @@
 
 %document details
 \author{William Falk-Wallace (wgf2104), Hila Gutfreund (hg2287), \\Emily Lemonier (eql2001), Thomas Elling (tee2103)}
-\title{COMSW4115: Programming Languages and Translators\\The DJ Language: MIDI Synthesizer Language Reference Manual}
-\date{September 25, 2013}
+\title{COMSW4115: Programming Languages and Translators\\The DJ Language Reference Manual}
+\date{\today}
 
 \begin{document}
 
@@ -21,16 +21,28 @@
 \tableofcontents 
 \pagebreak[4]
 
-%sections
+%INTRODUCTION
 \section{Introduction}
 We propose a procedural scripting language, DJ, which provides a programming paradigm for algorithmic music production. Through its utilization of themes and motifs, music is naturally repetitive and often dynamic. DJ provides control-flow mechanisms, including \texttt{for} and \texttt{loop} functions, which simplify the development of structured iterative music. The DJ Language also makes use of conditional logic and offers built-in effects (including pitch bend, tremolo and vibrato).
 %Moreover, it supports extensible sound banks to facilitate the production of deeply textured musical compositions.
-Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing songs.
+Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing music.
 
+%LEXICAL CONVENTIONS
+%|_COMMENTS
+%|_IDENTIFIERS
+%|_KEYWORDS
+%|_CONSTANTS
 \section{Lexical Conventions}
-\subsection{Identifiers}
-An identifier is a sequence of letters, underscores and digits. The first character of an identifier is a letter ['a'-'z'] or ['A' - 'Z']. Note that in identifiers, uppercase and lowercase letters correspond to different characters.
 
+%COMMENTS
+\subsection{Comments} 
+Comments are initialized by the character sequence \texttt{/*} and terminated by the first following character sequence \texttt{*/}.
+
+%IDENTIFIERS
+\subsection{Identifiers}
+An identifier is a sequence of letters, underscores and digits; note that in identifiers, uppercase and lowercase letters correspond to different characters. The first character of an identifier is a letter [`a'-`z'] or [`A' - `Z'].
+
+%KEYWORDS
 \begin{samepage}
 \subsection{Keywords}
 Keywords are reserved identifiers and may not be redefined. They are used for control structure, constants, as well as system level function calls.
@@ -38,24 +50,23 @@ Keywords are reserved identifiers and may not be redefined. They are used for co
 \centering
 \begin{tabularx}{.75\textwidth}{|X|X|X|}
 \hline
-\texttt{int} & \texttt{Note} & \texttt{Rest} \\
+\texttt{int} & \texttt{note} & \texttt{rest} \\
 \hline
-\texttt{Note} &  \texttt{Rest} & \texttt{Chord} \\
+\texttt{chord} & \texttt{track} & \texttt{song} \\
 \hline
-\texttt{Track} & \texttt{SONG} & \texttt{if} \\
+\texttt{array} &  \texttt{if} & \texttt{else} \\
 \hline
-\texttt{else}  & \texttt{for} & \texttt{loop}\\
-\hline
-\texttt{null} & \texttt{return} &  \\
+\texttt{for} &  \texttt{return} & \texttt{loop} \\
 \hline
 \end{tabularx}
 \end{table}
-Things to consider: while, tempo. DO WE WANT TO INCLUDE THESE??
-How do we want to consider int, boolean (literals vs. types)?
 \end{samepage}
+
+%LITERALS
 \subsection{Literals}
 \subsubsection{Integers}
-An integer literal is a data type which represents some finite subset of the mathematical integers. If '-' is prepended to the integer, the value of the integer is considered negative (ex: int x = -22). Our language supports integer values within the range $[-22^{31}, 22^{31}]$.
+An integer literal is a data type which represents some finite subset of the mathematical integers. If '-' is prepended to the integer, the value of the integer is considered negative (ex: int x = -22). An integer may take a value between $−2^{30}$ and $2^{30}−1$ on 32-bit systems and up to $−2^{62}$ to $2^{62}−1$. These ranges are a reflection of the OCAML standards.
+%found those numbers on the ocaml site
 \subsubsection{Booleans}
 Boolean literals are represented by the keywords \texttt{true} and \texttt{false}. They are used in any comparison operation in which a boolean value is returned.
 \subsubsection{Note}
@@ -200,12 +211,6 @@ TODO: How do we want to think about duration as per Julian's recommendations?
 \subsection{Function/Variable Scoping}
 Braces determine the scope of a function/variables. For example, if a variable is declared within a function, it is a local variable to that function and can only be accessed in that function. That local variable would be defined within the braces of a function body. A global variable would be defined outside the scope of braces.
 Global functions?
-
-\subsection{Comments} 
-Want to use the /* ------- */ comment format? Or the // format? Both?
-And do we want to nest comments? Nested comments sound too complicated to parse through. 
----  think we should do /* */ (would be easier to write compiler for, i think… ) - hila
---- will suggested just using a comment per line. So if we had a ‘//’ then that whole line would be a comment. That would avoid confusion in terms of nesting comments. -tom
 
 \section{Compile Process and Output Files}
 CSV to MIDI to Java. CSV2MIDI Java Class. 
