@@ -60,7 +60,7 @@ Keywords are reserved identifiers and may not be redefined. They are used for co
 \hline
 \texttt{for} & \texttt{return} & \texttt{loop} \\
 \hline
-\texttt{fun} & & \\
+\texttt{fun} & \texttt{vol} & \texttt{dur} \\
 \hline
 \end{tabularx}
 \end{table}
@@ -69,15 +69,19 @@ Keywords are reserved identifiers and may not be redefined. They are used for co
 %CONSTANTS AND STRUCTURES
 \subsection{Constants and Structures}
 \subsubsection{Integers}
-An integer constant is a primitive data type which represents some finite subset of the mathematical integers. If '-' is prepended to the integer, the value of the integer is considered negative (ex: int x = -22). An integer may take a value between $−2^{30}$ and $2^{30}−1$ on 32-bit systems and up to $−2^{62}$ to $2^{62}−1$. These ranges are a reflection of the OCAML standards.
+An integer constant is a primitive data type which represents some finite subset of the mathematical integers. If `-' is prepended to the integer, the value of the integer is considered negative (ex: \texttt{int x = -22}). An integer may take a value between $-2^{30}$ and $2^{30}-1$ on 32-bit systems and up to $-2^{62}$ to $2^{62}-1$. %These ranges are a reflection of the OCAML standards.
 %found those numbers on the ocaml site
 \subsubsection{Note}
-Note literals are the most basic units of a song, and are represented using the following notation: (pitch, instrument, volume). (NOTE TO SELVES: we removed , duration, tremolo, vibrato, pitch bend from note definition.)
+Note literals are the most basic units of a song, and are represented using the following notation: (pitch, instrument, volume, duration).
 \subsubsection{Rest}
+A rest literal is a basic unit of a composition (and DJ program) that doesn't have a pitch, instrument, or volume, but does maintain a duration.
 %\subsection{Data Types}
 \subsubsection{Array}
+Arrays ummm... TODO 
 \subsubsection{Chord}
+A primitive data structure representing a collection of Notes which are intended to be performed beginning in the same beat. 
 \subsubsection{Track}
+A collection of Chords which follow linearly and are all intended to be played by the same instrument.
 
 %SEPARATORS
 \subsection{Separators}
@@ -86,15 +90,16 @@ A separator distinguishes tokens. White space is a separator and is discussed in
 %WHITESPACE
 \subsection{White Space}
 White space collectively refers to the space character, the tab character, and the newline character. White space is used to separate tokens and is otherwise ignored. Wherever one space is allowed, any length of white space is allowed.
-For example: $y$$=$$x$$+$$5$ is equivalent to $y$\textvisiblespace $=$\textvisiblespace  \textvisiblespace $x$\textvisiblespace $+$\textvisiblespace $5$.
+For example: $y$$=$$x$$+$$5$ is equivalent to $y$\textvisiblespace $=$\textvisiblespace  \textvisiblespace $x$\textvisiblespace $+$\textvisiblespace $5$, since $y$, $x$, $5$, $+$, and $=$ are all complete tokens.
 
 %EXPRESSIONS AND OPERATORS
 \section{Expressions and Operators}
-An operator is a special token that specifies an action performed on either one or two operands. Operator precedence is specified in the order of appearance in the following sections of this document; directional associativity is also specified for each operator. The order of evaluation of all other expressions is left unspecified.
+An operator is a special token that specifies an action performed on either one or two operands. Operator precedence is specified in the order of appearance in the following sections of this document; directional associativity is also specified for each operator. The order of evaluation of all other expressions is left to the compiler and is not guaranteed.
 
 %DECLARATIONS
 \subsection{Variable Declaration}
-
+Declarations dictate the class type of identifiers. Declarations take the form
+\texttt{type-specifier identifier}, and are optionally followed by declarators of the form \texttt{type-specifier (expression)}.
 
 %PRIMARY EXPRESSIONS
 \subsection{Fundamental Expressions}
@@ -102,31 +107,33 @@ Fundamental expressions consist of function calls and those expressions accessed
 %It's a word. I checked.
 
 
-===STICK WITH DOT FOR CONCAT, USE -\textgreater FOR attribute/internal operator/method ACCESS===
+%===STICK WITH DOT FOR CONCAT, USE -\textgreater FOR attribute/internal operator/method ACCESS===
 %#BECAUSEITSPRETTY
 
 %this is a bit close to the C LRM, so let's play around with it
 \subsubsection{Identifiers} 
-eg. function name, variable name
-
+Identifiers are primary expressions whose types and values are specified in their declarations.
 \subsubsection{Constants}
-eg. note, volume, pitch
-
+Integer, note, rest, array, chord, and track constants are primary expressions.
 \subsubsection{(expression)}
+A parenthesized expression is a primary expression and is in all ways equivalent to the non-parenthesized expression.
 \subsubsection{primary [expr]}
-\subsubsection{primitive (args...)}
-\subsubsection{primitive --\textgreater\ attribute}
-
+An expression in square brackets following a primary expression is a primary expression. It specifies array element, note attribute, or chord or track member addressing. 
+\subsubsection{primary (args...)}
+An parenthesized expression following a primary expression is a primary expression. It specifies a function call which may accept a variable-length, comma-separated list of parameters \texttt{args}.
+\subsubsection{primary \texttt{-\textgreater} attribute}
+A primary expression followed by \texttt{-\textgreater} and an attribute name is a primary expression. It specifies primitive data type structure-attribute access.
 \subsection{Unary Operators}
-right to left
+Unary Operators are right-to-left associative.
 \subsubsection{$-$ expression}
+If the expression resolves to an integer data-type, the `-' operator causes the expression to be considered as a negative value.
 \subsubsection{expression $++$}
-This expression behaves as a shorthand method for increasing notes in the left operand by one half step. 
+This expression behaves as a shorthand for taking the expression result and depending on its type, incrementing its value: for integer types this means an incremental increase in value; for notes it increases pitch by one tonal half step (whole integer increase); and for chords and tracks, it increments all member-note pitches. 
 \subsubsection{expression $--$}
-This expression behaves as a shorthand method for decreasing notes in the left operand one half step. 
+This expression behaves as above, decrementing instead of incrementing.
 \subsection{Effects}
 \subsubsection{expression\textasciicircum}
-This expression takes the notes in the left operand and creates a vibrator effect on each indivdual note. 
+This expression takes the notes in the left operand and creates a vibrator effect on each individual note. 
 \subsubsection{expression\textasciitilde}
 This expression takes the notes in the left operand and creates a tremelo effect on each individual note.
 \subsubsection{expression \% expression}
@@ -134,13 +141,13 @@ Pitch bend
 
 
 \subsection{Multiplicative Operators}
-Left to right
+Multiplicative operators are left-to-right associative.
 \subsubsection{expression $*$ expression}
 \subsubsection{expression $/$ expression}
-Integer division only. floor/ceiling?
+Integer multiplication and division act as expected, except the division operator, $/$, truncates its result to the nearest integer; it computes $\lfloor{expr / expr}\rfloor$
 
 \subsection{Additive Operators}
-Left to right
+Additive operators are left-to-right associative.
 \subsubsection{expression $+$ expression}
 operators must be notes, chords, tracks, or ints and the result is pitch addition for ... and integer arithmetic for ints.
 
@@ -157,12 +164,17 @@ This expression takes the notes, chords, or tracks on the right hand side and pa
 \subsection{Relational Operators}
 Left to right
 \subsubsection{expression $<$ expression}
+This expression checks whether all notes within the left operand are less than all the notes within the right operand
 \subsubsection{expression $>$ expression}
+This expression checks whether all notes within the left operand are greater than all the notes within the right operand
 \subsubsection{expression $<=$ expression}
+This expression checks whether all notes within the left operand are less than or equal to all the notes within the right operand
 \subsubsection{expression $>=$ expression}
+This expression checks whether all notes within the left operand are greater than or equal to all the notes within the right operand
 \subsubsection{expression $==$ expression}
 This expression checks whether all notes within two operands are equal to one another. 
 \subsubsection{expression $!=$ expression}
+This expression checks whether all notes within two operands are not equal to one another
 
 \subsection{Assignment Operators}
 right to left
@@ -188,9 +200,10 @@ else
 else-statement (make this safe format as the examples?)
 \subsection{The \texttt{for} Statement}
 \subsection{The \texttt{return} Statement}
+Causes the current function call to end in the current sub-routine and return to where the function was called. The return function can return nothing (\texttt{return;}) or a return value can be passed back to the calling function (\texttt{return expression;}).
 \section{Functions}
 \subsection{Defining Functions}
-Functions are defined by a function name followed by parenthesis that contain parameters to the function separated by commas. All functions must have a return statement? The function body is contained between a curly brace at the beginning and a curly brace at the end of the function.
+Functions are defined by a function name followed by parenthesis that contain parameters to the function separated by commas. All functions must have a return statement. The function body is contained between a curly brace at the beginning and a curly brace at the end of the function.
 
 mergeTrack (track1, track2) \{ \\
 		/*stuff*/ \\
@@ -199,7 +212,7 @@ mergeTrack (track1, track2) \{ \\
 
 
 \subsection{The \texttt{song} Function}
-The \texttt{song} function is where the tracks a user has created will be modified and/or combined. (This is where the music is essentially created?) The \texttt{song} function returns an array of tracks which represent the complete song.
+The \texttt{song} function is where the tracks a user has created will be modified and/or combined. This is where the music is essentially created. The \texttt{song} function returns an array of tracks which represent the complete song.
 
 \begin{samepage}
 \subsection{Reserved Functions}
@@ -209,10 +222,6 @@ SOME NOT FUNCTIONS, JUST ATTRIBUTES; like vol/dur...
 \begin{tabularx}{.75\textwidth}{|c|X|}
 \hline
 print(expression) & print to console \\
-\hline
-vol(integer) & Change Chord/Note/Track volume (scale?). \\
-\hline
-dur(integer) & Change Chord/Note duration (number of beats). \\
 \hline
 loop(integer) & Loops a given Note, Chord, or Track the over number of beats specified. If given a number of beats fewer than the total track size (n.b. implicit elevation occurs as necessary), first $<$int$>$ beats will be included. \\
 \hline
