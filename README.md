@@ -9,8 +9,8 @@ Documents
 
 1. **_Proposal_**: Design proposal for a synthesizer language
 2. **_Language Reference Manual_**: The DJ Language Reference Manual
-3. **_Final Report_**: The DJ Language Reference Manual
-4. **_Presentation_**: The DJ Language Reference Manual
+3. **_Final Report_**: The DJ Language Final Project Report
+4. **_Presentation_**: The DJ Language Project Presentation
 
 **Extras**
 
