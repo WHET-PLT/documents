@@ -1,0 +1,18 @@
+//the main function
+SONG {
+	s = Track[1];
+	s[0] = t;
+    
+	num_beats = 1;
+	c = 60;
+	vol = 50;
+	piano = 1;
+    
+	//a for loop
+	for(i = 0; i <= 8; i++) {
+    		//make a new note with incremental pitch
+    		Note n = {c + i, piano, vol, num_beats, 0, 0, 0};
+        	//concatenate that note to the first (only) track of the song
+    		s[0].n;
+    	}
+}

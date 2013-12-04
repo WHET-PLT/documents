@@ -1,0 +1,24 @@
+Track loopEffects () {
+
+	int pitchA = 60; //pitch of a will be middle C
+	int pitchB = 62; //up a full step for b
+	int pitchC = 65; // up a step and a half for a minor/dissonant something
+	int volume = 50; //volume 50 - right in the middle
+	int instr = 1; //use a piano -- mapped instrument 1
+	int duration = 2;
+
+	Note a, b, c;
+	a = {pitchA, instr, volume, duration, 0, 0, 0};
+	b = {pitchB, instr, volume, duration, 0, 0, 0};
+	c = {pitchC, instr, volume, duration, 0, 0, 0};
+	
+	Chord ch = a : b : c;
+
+	Track t = ch.repeat(50);
+
+	for(int i = 0; i < t.size(); i += 2) { //iterate over every other chord in t
+		t[i][0]~; //for every other chord in t, add a tremolo to the 0th Note
+		t[i+1][0].vol(t[i+1][0].vol + 5); //for the rest of the chords, increase its volume by 5
+	}
+	return t;
+}

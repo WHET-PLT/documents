@@ -1,18 +1,29 @@
-Documents ![image](assets/drop_tiny.png)
+Documents
 =========
 *Submissions, white papers, internal documents, and resources*
 
 
-**Contents**
+###Contents
 
-- **_Proposal_**: Design proposal for a synthesizer language
-	- [General MIDI Patchmap][pm] (Instrument Mapping)
+**Reports**
+
+1. **_Proposal_**: Design proposal for a synthesizer language
+2. **_Language Reference Manual_**: The DJ Language Reference Manual
+3. **_Final Report_**: The DJ Language Reference Manual
+4. **_Presentation_**: The DJ Language Reference Manual
+
+**Extras**
+
 - _Structure_: Musical terminology and structure for reference
-- **_LRM_**: The DJ Language Reference Manual
+	- [General MIDI Patchmap][pm] (Instrument Mapping)
 - _Examples_: Example program source files
 
 
-**Resources**
+
+
+###Resources
+
+[www.writelatex.com](http://www.writelatex.com)
  
 - Music/Synth Basics: [explainthatstuff][basics]
 - MIDI Overview: [midi.org][midi]
@@ -20,7 +31,6 @@ Documents ![image](assets/drop_tiny.png)
 - Synthesizer Effects: [tuts+ noise effects][effects]
 - Java Synthesizer Example: [java midi][java]
 - CSV-to-MIDI Converter: [converter][csv]
-
 
 
 <!-- footnotes -->
