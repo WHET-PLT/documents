@@ -1,0 +1,292 @@
+\documentclass[letterpaper]{article}
+\usepackage{fullpage, amsmath, amssymb, enumerate, tabularx, listings, color, float}
+%take up ALLOFTHEPAGE
+\usepackage[margin=0.75in]{geometry}
+%for footnotes
+\usepackage[bottom]{footmisc}
+
+%for the code example parts
+\definecolor{gray}{gray}{0.5}
+\lstset{numbers=left, numbersep=5pt, numberstyle=\tiny \color{gray}, frame=l, commentstyle=\color{gray}, comment=[l]{\/\/}}
+
+%document details
+\author{William Falk-Wallace (wgf2104), Hila Gutfreund (hg2287), \\Emily Lemonier (eql2001), Thomas Elling (tee2103)}
+\title{COMSW4115: Programming Languages and Translators\\The DJ Language Final Report}
+\date{\today}
+
+\begin{document}
+
+%first page: title and toc
+\maketitle
+\tableofcontents 
+\pagebreak[4]
+
+%INTRODUCTION
+\section{Introduction}
+We propose a procedural scripting language, DJ, which provides a programming paradigm for algorithmic music production. Through its utilization of themes and motifs, music is naturally repetitive and often dynamic. DJ provides control-flow mechanisms, including \texttt{for} and \texttt{loop} functions, which simplify the development of structured iterative music. The DJ Language also makes use of conditional logic and offers built-in effects (including pitch bend, tremolo and vibrato).
+%Moreover, it supports extensible sound banks to facilitate the production of deeply textured musical compositions.
+Our goal in the specification of The DJ Language is to abstract away the intricacies and limitations of the MIDI specification, including channeling, patch-maps and instrumentation, allowing the artist to focus on her or his work: composing music.
+
+%LEXICAL CONVENTIONS
+%|_COMMENTS
+%|_IDENTIFIERS
+%|_KEYWORDS
+%|_CONSTANTS AND STRUCTURES
+%|_SEPARATORS
+%|_WHITE SPACE
+\section{Lexical Conventions}
+
+%COMMENTS
+\subsection{Comments} 
+Comments are initialized by the character sequence \texttt{/*} and terminated by the first following character sequence \texttt{*/}.
+
+%IDENTIFIERS
+\subsection{Identifiers}
+An identifier is a sequence of letters, underscores and digits; note that in identifiers, uppercase and lowercase letters correspond to different characters. The first character of an identifier is a letter [`a'-`z'] or [`A' - `Z'].
+
+%KEYWORDS
+\begin{samepage}
+\subsection{Keywords}
+Keywords are reserved identifiers and may not be redefined. They are used for control structure, constants, as well as system level function calls.
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|X|X|X|}
+\hline
+\texttt{int} & \texttt{note} & \texttt{rest} \\
+\hline
+\texttt{chord} & \texttt{track} & \texttt{song} \\
+\hline
+\texttt{array} & \texttt{if} & \texttt{else} \\
+\hline
+\texttt{for} & \texttt{return} & \texttt{loop} \\
+\hline
+\texttt{fun} & \texttt{vol} & \texttt{dur} \\
+\hline
+\texttt{print} &  &  \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+%CONSTANTS AND STRUCTURES
+\subsection{Constants and Structures}
+\subsubsection{Integers}
+An integer constant is a primitive data type which represents some finite subset of the mathematical integers. If `-' is prepended to the integer, the value of the integer is considered negative (ex: \texttt{int x = -22}). An integer may take a value between $-2^{30}$ and $2^{30}-1$ on 32-bit systems and up to $-2^{62}$ to $2^{62}-1$.  
+%These ranges are a reflection of the OCAML standards.
+
+\subsubsection{Note}
+Note literals are atomic structures representing characteristic attributes of a musical note, including 
+, volume, duration (in beats or time-ticks) and effects including tremolo, vibrato and pitch bend. The tremolo, vibrato, and pitch bend attributes default to false when not specified in note construction. Attributes are mutable and so may be modified throughout the program. 
+
+\subsubsection{Rest}
+A rest literal is an atomic unit of a composition (and DJ program) that doesn't have a pitch, instrument, or volume, but does maintain a duration. Rests allow for a tonal pause in a song.
+%\subsection{Data Types}
+
+\subsubsection{Array}
+An array is an ordered data structure composed of elements of any of primitive types. 
+
+\subsubsection{Chord}
+A primitive data structure representing a collection of notes which begin on the same beat. 
+
+\subsubsection{Track}
+A series of chords which are played sequentially by the same instrument.
+% REPLACED: A collection of Chords, in series,  which follow linearly and are all intended to be played by the same instrument.
+
+%SEPARATORS
+\subsection{Separators}
+A separator distinguishes tokens. White space is a separator and is discussed in the next section, but it is not a token. All other separators are single-character tokens. These separators include \texttt{( ) \textless\  \textgreater\ $\{$ $\}$ [ ] ;}. Note that \texttt{;}  is used to indicate the end of an expression or statement. 
+
+%WHITESPACE
+\subsection{White Space}
+White space collectively refers to the space character, the tab character, and the newline character. White space is used to separate tokens and is otherwise ignored. Wherever one space is allowed, any length of white space is allowed.
+For example: $y$$=$$x$$+$$5$ is equivalent to $y$\textvisiblespace $=$\textvisiblespace  \textvisiblespace $x$\textvisiblespace $+$\textvisiblespace $5$, since $y$, $x$, $5$, $+$, and $=$ are all complete tokens.
+
+%EXPRESSIONS AND OPERATORS
+\section{Expressions and Operators}
+An \textit{operator} is a special token that specifies an action performed on either one or two operands. Operator precedence is specified in the order of appearance in the following sections of this document; directional associativity is also specified for each operator. The order of evaluation of all other expressions is left to the compiler and is not guaranteed. An \textit{lvalue} is a manipulable object. Identifiers are typical \textit{lvalues} but \textit{lvalues} are also returned by some functions, including serial and parallel add for example. 
+
+%DECLARATIONS
+\subsection{Variable Declaration}
+Declarations dictate the type of identifiers. Declarations take the form
+\texttt{type-specifier identifier}, and are optionally followed by declarators of the form \texttt{type-specifier (expression)}.
+
+%PRIMARY EXPRESSIONS
+\subsection{Primary Expressions}
+Fundamental expressions consist of function calls and those expressions accessed using \texttt{-\textgreater} (described below); these are grouped rightwardly.
+%It's a word. I checked.
+
+%===STICK WITH DOT FOR CONCAT, USE -\textgreater FOR attribute/internal operator/method ACCESS===
+%#BECAUSEITSPRETTY
+
+\subsubsection{Identifiers} 
+Identifiers are primary expressions whose types and values are specified in their declarations.
+
+\subsubsection{Constants}
+Integer, note, rest, array, chord, and track constants are primary expressions.
+
+\subsubsection{(expression)}
+A parenthesized expression is a primary expression and is in all ways equivalent to the non-parenthesized expression.
+
+\subsubsection{primary [expr]}
+An expression in square brackets following a primary expression is a primary expression. It specifies array element, note attribute, or chord or track member addressing. 
+
+\subsubsection{primary (args...)}
+A parenthesized expression following a primary expression is a primary expression. It specifies a function call which may accept a variable-length, comma-separated list of parameters \texttt{args}.
+
+\subsubsection{primary \texttt{-\textgreater} attribute (expression)}
+A primary expression which evaluates to a note followed by \texttt{-\textgreater}, an attribute name, and parenthesis containing an optional integer expression is a primary expression. It specifies primitive data type attribute access and modify. The expression evaluates to an integer representing the old (if optional expression parameter is not supplied) or newly set attribute value. (ex:  \texttt{int p = n -\textgreater\ pitch()} returns the pitch, an integer value, for a previously declared note n.)
+
+\subsection{Unary Operators}
+Unary Operators are left-to-right associative, except for `$-$', which is right-to-left associative.
+
+\subsubsection{$-$ expression}
+If the expression resolves to an integer data-type, the `-' operator causes the expression to be considered as a negative value.
+
+\subsubsection{lvalue $++$}
+This expression behaves as a shorthand for taking the expression result and depending on its type, incrementing its value: for integer types this means an incremental increase in value; for notes it increases pitch by one tonal half step (whole integer increase); and for chords and tracks, it increments all member-note pitches. 
+\subsubsection{lvalue $--$}
+This expression behaves as above, decrementing instead of incrementing.
+\subsection{Effects}
+\subsubsection{lvalue \textasciicircum}
+This expression takes a note, track, or chord as the left operand and applies a vibrato effect to an individual note or each note within a chord or track.
+
+\subsubsection{lvalue \textasciitilde}
+This expression takes a note, track, or chord as the left operand and applies a tremelo effect to each individual note or each note within a chord or track.
+
+\subsubsection{lvalue \% expression}
+This expression takes either a note, chord, or track as the left operand. The \% operator applies a pitch-bend effect to a note or to each individual note within a track or chord. The amplitude of the pitch-bend applied is specified by the right operand
+
+\subsection{Multiplicative Operators}
+Multiplicative operators are left-to-right associative.
+
+\subsubsection{expression $*$ expression}
+Integer multiplication acts as expected, returning an integer which is the result of the multiplication of the two provided integers. If the left operand is a note, rest, chord or track the right operand must have an integer type.  The multiplication of a note n and an int i returns a chord which is n, serially added i times. The multiplication of a chord c and an int i returns a track which is c, serially added i times. The multiplication of a track t and an int i returns a track which is t, serially added i times.
+
+\subsubsection{expression $/$ expression}
+Integer division truncates its result to the nearest integer; it computes $\lfloor{expr / expr}\rfloor$. Unlike multiplication, division cannot be applied to notes, chords, or tracks.
+
+\subsection{Additive Operators}
+Additive operators are left-to-right associative.
+
+\subsubsection{expression $+$ expression}
+This expression takes the expression result of the left operand and, depending on its type, increases its value by the amount specified in the right operand: for integer types this means an additive increase in value; for notes it increases pitch by a specified number of tonal half steps (whole integer increases to the pitch attribute); and for chords and tracks, it performs the preceding pitch-increase operation on all member-notes. 
+
+\subsubsection{expression $-$ expression}
+This expression behaves like \texttt{expression $+$ expression} above, except the  left operand is decreased by the right operand. 
+
+\subsubsection{expression $.$ expression}
+This expression takes the expression in the right operand and concatenates it to the expression in the left operand, returning a track. The inputs can be any combination of notes, chords, or tracks, as the notes and chords are elevated to tracks before concatenation.
+
+\subsubsection{expression $:$ expression}
+This expression takes the notes, chords, or tracks that are the result of the right operand and adds them to the note, chord, or track of the left operand in parallel. When used on notes, the expression returns a new chord containing both notes; when used on chords it returns a new chord representing the union of the original chords; when used on tracks it returns a new track such that the Chords are added in parallel by corresponding time tick, with no added offset. 
+
+\subsection{Relational Operators}
+Relational operators are left-to-right associative.
+\subsubsection{expression $<$ expression}
+The $<$ operator may take integers, notes, chords, and tracks as input expressions. If the $<$ operator is applied to integers, it returns an integer 1 if the integer on the left is less than the integer on the right and 0 otherwise. If applied to notes, chords, or tracks, this expression checks whether all notes within the left operand have a pitch value less than all the notes within the right operand and returns an integer 1 if true, 0 if false. 
+\subsubsection{expression $>$ expression}
+The $>$ operator may take integers, notes, chords, and tracks as input expressions. If the $>$ operator is applied to integers, it returns an integer 1 if the integer on the left is greater than the integer on the right and 0 otherwise. If applied to notes, chords, or tracks, this expression checks whether all notes within the left operand have a pitch value greater than all the notes within the right operand and returns an integer 1 if true, 0 if false.
+\subsubsection{expression $<=$ expression}
+The $<=$ operator may take integers, notes, chords, and tracks as input expressions. If the $<=$ operator is applied to integers, it returns an integer 1 if the integer on the left is less than or equal to the integer on the right and 0 otherwise. If applied to notes, chords, or tracks, this expression checks whether all notes within the left operand have a pitch value less than or equal to all the notes within the right operand and returns an integer 1 if true, 0 if false. 
+\subsubsection{expression $>=$ expression}
+The $>$ operator may take integers, notes, chords, and tracks as input expressions. If the $>=$ operator is applied to integers, it returns an integer 1 if the integer on the left is greater or equal to than the integer on the right and 0 otherwise. If applied to notes, chords, or tracks, this expression checks whether all notes within the left operand have a pitch value greater than or equal to all the notes within the right operand and returns an integer 1 if true, 0 if false.
+\subsubsection{expression $==$ expression}
+The $==$ operator may take integers, notes, chords, and tracks as input expressions. If the $==$ operator is applied to integers, it returns an integer 1 if the integer on the left is equal to the integer on the right and 0 otherwise. If applied to notes, chords, or tracks, this expression checks whether all notes within the left operand have a pitch value equal to all the notes within the right operand and returns an integer 1 if true, 0 if false.
+\subsubsection{expression $!=$ expression}
+The $!=$ operator may take integers, notes, chords, and tracks as input expressions. If the $!=$ operator is applied to integers, it returns an integer 1 if the integer on the left is not equal to the integer on the right and 0 otherwise. If applied to notes, chords, or tracks, this expression checks whether all notes within the left operand have a pitch value not equal to all the notes within the right operand and returns an integer 1 if true, 0 if false.
+\subsection{Assignment Operators}
+Assignment operators are right-to-left associative.
+\subsubsection{lvalue $=$ expression}
+The assignment operator stores the result of the evaluation of the right operand expression in the lvalue. 
+
+\section{Statements}
+Statements cause actions and are responsible for control flow within your programs.
+\subsection{Expression Statement}
+Any statement can turn into an expression by adding a semicolon to the end of the expression (ex: 2+2;). 
+\subsection{The \texttt{if-than-else} Statement}
+We use the \texttt{if-than-else} statement to conditionally execute part of a program, based on the truth value of a given expression.\\
+General form of \texttt{if} statement:  \\
+\texttt{if (conditional-test) \{ \\
+statement \} \\
+else \{ \\
+statement \} } \\ \\
+The \texttt{else} keyword and following, dependent \texttt{statement} are optional.
+\subsection{The \texttt{for} Statement}
+We use the \texttt{for} statement to loop over part of a program, based on variable initialization, expression testing, and variable modification. It is easy to use the form for making counter controlled loops. \\
+General form of the \texttt{for} statement: \\
+\texttt{for (initialize; test; step) \{ \\
+statement \} }
+%\subsection{The BLOCK Statement}
+\subsection{The \texttt{return} Statement}
+Causes the current function call to end in the current sub-routine and return to where the function was called. The return function can return nothing (\texttt{return;}) or a return value can be passed back to the calling function (\texttt{return expression;}).
+\section{Functions}
+\subsection{Defining Functions}
+Functions are defined by a function name followed by parenthesis that contains function parameters separated by commas. All functions must have a \texttt{return} statement. The function body is contained between a curly brace at the beginning and a curly brace at the end of the function. \\\\ mergeTrack (track1, track2) \{ \\
+		/*stuff*/ \\
+	return newtrack;\\
+\}
+
+
+\subsection{The \texttt{song} Function}
+The \texttt{song} function is where the tracks a user has created will be modified and/or combined. This is where the music is essentially created. The \texttt{song} function returns an array of tracks which represent the complete song.
+
+\begin{samepage}
+\subsection{Reserved Functions}
+\begin{table}[H]
+\centering
+\begin{tabularx}{.75\textwidth}{|c|X|}
+\hline
+print(expression) & print to console \\
+\hline
+lvalue-\textgreater loop(integer) & Loops a given bote, chord, or track the over number of beats specified. If given a number of beats fewer than the total track size (n.b. implicit elevation occurs as necessary), first $<$int$>$ beats will be included. \\
+\hline
+expression-\textgreater repeat(integer) & Repeats a given note, chord, or track $<$int$>$ times, returning a new track. \\
+\hline
+lvalue-\textgreater add(expression) & Adds a chord to a track. \\
+\hline
+lvalue-\textgreater strip(expression) & Removes all instances of chord from a track. \\
+\hline
+lvalue-\textgreater remove(integer) & Removes chord from track at designated location. \\
+\hline
+\end{tabularx}
+\end{table}
+\end{samepage}
+
+\subsection{Block Scoping}
+Braces, $\{$ and $\}$, determine the scope of a set of statements and corresponding function and variable definitions. For example, if a variable is declared within a block, it is a local variable contained in that block and can only be accessed within that block and for so long as that block is active in the program environment. Blocks are used to specify function definition and conditional and control-flow operation scope. Local variables defined within the block of a function definition are accessible only within that function, during its operation. 
+%figure below is included above already:
+%A global variable can be defined outside the scope of braces.
+
+\section{Compile Process and Output Files}
+
+\subsection{JAVA and MIDI}
+All programs consist of a single main function, called \texttt{song}, that returns an array of tracks, intended to start simultaneously and be played in parallel. Each array element can be considered as a polyphonic MIDI channel. This array of tracks is compiled into a CSV file containing the complete set of notes with corresponding time-tick organized into tracks with corresponding instrument mappings required to produce the programmed song. A third party CSV-to-MIDI JAVA library  will be used to produce the final sound file.\footnote[1]{`` CSV2MIDI.java Sourcecode" MIDILC Language, 28 Oct 2013. Web. 28 Oct 2013. \textless https://midilc.googlecode.com/svn-history/r122/trunk/src/components/CSV2MIDI.java\textgreater.}
+
+\subsection{Compiler Options}
+Song-wide properties are specified to the compiler. Attributes like channel looping and transformation from beats to proper-time using attributes such as tempo/beats per minute are available as compiler options.
+
+\section{Hopes and Dreams}
+This structure, as well as the use of the MIDI specification and interface, allows for a fairly extensible language and production capability. For example, through the manipulation or linking of sound banks, new sounds and samples are able to be incorporated to produce rich and interesting programmatic music.
+
+\section{Examples}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 1: Arpeggio}
+%\lstinputlisting{arpeggio_dj.txt}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 2: Loop With Effects}
+%\lstinputlisting{loop_with_effects_dj.txt}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\subsection{Example 3: Add/Remove Notes \& Chords}
+%\lstinputlisting{addRemoveChords_dj.txt}
+\end{minipage}
+
+\end{document}
+
+
+
+
